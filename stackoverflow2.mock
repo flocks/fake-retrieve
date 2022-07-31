@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+cache-control: private
+content-length: 5372
+content-type: application/json; charset=utf-8
+strict-transport-security: max-age=15552000
+access-control-allow-origin: *
+access-control-allow-methods: GET, POST
+access-control-allow-credentials: false
+x-content-type-options: nosniff
+x-request-guid: 00563b82-5c3f-499c-baf2-b6671a9f81b9
+content-security-policy: upgrade-insecure-requests; frame-ancestors 'self' https://stackexchange.com
+date: Sat, 30 Jul 2022 20:50:51 GMT
+
+{}

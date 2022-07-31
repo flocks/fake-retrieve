@@ -1,0 +1,68 @@
+* fake.retrieve.el
+
+Simple emacs package to mock response from `url-retrieve` when you are
+working off the grid.
+
+* Overview
+
+The packages comes with 2 simple macros. You can wrap your
+`url-retrieve` functions call in your code and it will use mock file
+instead of doing a real network call.
+
+Mock files content should be in the same format than what
+`url-retrieve` usually returns. For instance:
+
+
+#+BEGIN_SRC
+HTTP/1.1 200 OK
+cache-control: private
+content-length: 5372
+content-type: application/json; charset=utf-8
+strict-transport-security: max-age=15552000
+access-control-allow-origin: *
+access-control-allow-methods: GET, POST
+access-control-allow-credentials: false
+x-content-type-options: nosniff
+x-request-guid: 00563b82-5c3f-499c-baf2-b6671a9f81b9
+content-security-policy: upgrade-insecure-requests; frame-ancestors 'self' https://stackexchange.com
+date: Sat, 30 Jul 2022 20:50:51 GMT
+
+{"items":[]}
+#+END_SRC
+
+** with-fake-retrieve-file
+
+For simple usage, `with-fake-retrieve-file` is enough. 
+
+#+BEGIN_SRC emacs-lisp
+ (with-fake-retrieve-file "~/path/to/file.mock"
+					   (url-retrieve "https://some-distant-url"
+									 (lambda (_)
+									   ;; manipulate response
+									   )))  
+#+END_SRC
+
+
+** with-fake-retrieve
+
+For most advanced usages, you can use the more complete `with-fake-retrieve`
+that relies on the variable `fake-retieve-store`
+
+#+BEGIN_SRC emacs-lisp
+(setq fake-retrieve-endpoints
+  '((:match "https://api.stackexchange.com/2.3/search?tagged=javascript&intitle=sort&site=stackoverflow"
+			:delay 0.5
+			:file "~/path/to/file/mock")
+	(:match "https://github.com/test/"
+			:delay 0.5
+			:file "~/path/to/file/mock")))
+
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+  (with-fake-retrieve (url-retrieve "https://some-distant-url"
+									(lambda (_)
+									  ;; manipulate response
+									  )))  
+#+END_SRC
