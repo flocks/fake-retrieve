@@ -1,13 +1,18 @@
 ;;;  -*- lexical-binding: t -*-
 
-(defvar fake-retrieve-endpoints
-  '((:match "https://api.stackexchange.com/2.3/search?tagged=javascript&intitle=sort&site=stackoverflow"
+(defcustom fake-retrieve-endpoints nil
+  "list of endpoint to match. Each element is of form
+(:match string :delay number :file string)
+
+Ex: ((:match "https://api.stackexchange.com/2.3/search?tagged=javascript&intitle=sort&site=stackoverflow"
 			:delay 0.5
 			:file "~/emacs-packages/fake-retrieve/stackoverflow.mock")
 	(:match "https://github.com/test/"
 			:delay 0.5
 			:file "~/.mock/response")))
-
+"
+  :type '(plist :value-type (:match string :delay number :file string))
+  :group 'ewaser)
 
 ;; TODO it should return something like #<buffer  *http api.stackexchange.com:443*-488730>
 (defun fake-retrieve--buffer-name (url)
@@ -35,6 +40,7 @@
 		  (funcall (fake-retrieve--mock-function ,file url callback))))
 	 ,@body))
 
+;; TODO should match with regex not string=
 (defun fake-retrieve--find-match (url)
   (catch 'match
 	(dolist (mock fake-retrieve-endpoints)
