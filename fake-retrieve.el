@@ -22,7 +22,7 @@ Ex: ((:match \"https://api.stackexchange.com/2.3/search?tagged=javascript&intitl
 (defun fake-retrieve--generate-status ()
   200)
 
-(defun fake-retrieve--mock-function (file url callback &optional delay)
+(defun fake-retrieve--mock-function (file url &optional callback delay)
   (let ((response (with-current-buffer (find-file-noselect file) (buffer-string))))
 	(lambda (&rest args)
 	  (run-at-time (or delay 0) nil
@@ -30,13 +30,17 @@ Ex: ((:match \"https://api.stackexchange.com/2.3/search?tagged=javascript&intitl
 					 (with-current-buffer (get-buffer-create (fake-retrieve--buffer-name url))
 					   (erase-buffer)
 					   (insert response)
-					   (funcall callback (fake-retrieve--generate-status))))))))
+					   (if callback
+						   (funcall callback (fake-retrieve--generate-status))
+						 response)))))))
 
 
 (defmacro with-fake-retrieve-file (file &rest body)
   `(cl-flet
 	   ((url-retrieve (url callback)
-		  (funcall (fake-retrieve--mock-function ,file url callback))))
+		  (funcall (fake-retrieve--mock-function ,file url callback)))
+		(url-retrieve-synchronously (url)
+		  (funcall (fake-retrieve--mock-function ,file url))))
 	 ,@body))
 
 ;; TODO should match with regex not string=
