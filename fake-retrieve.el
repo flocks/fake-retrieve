@@ -4,13 +4,12 @@
   "list of endpoint to match. Each element is of form
 (:match string :delay number :file string)
 
-Ex: ((:match "https://api.stackexchange.com/2.3/search?tagged=javascript&intitle=sort&site=stackoverflow"
+Ex: ((:match \"https://api.stackexchange.com/2.3/search?tagged=javascript&intitle=sort&site=stackoverflow\"
 			:delay 0.5
-			:file "~/emacs-packages/fake-retrieve/stackoverflow.mock")
-	(:match "https://github.com/test/"
+			:file \"~/emacs-packages/fake-retrieve/stackoverflow.mock\")
+	(:match \"https://github.com/test/\"
 			:delay 0.5
-			:file "~/.mock/response")))
-"
+			:file \"~/.mock/response\")))"
   :type '(plist :value-type (:match string :delay number :file string))
   :group 'ewaser)
 
